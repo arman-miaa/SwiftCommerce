@@ -24,7 +24,10 @@ const createProduct = async (req:Request, res:Response) => {
 
 
 const getAllProducts = async (req: Request, res: Response) => {
-    const result = await ProductServices.getProductsFromDB();
+    // const result = await ProductServices.getProductsFromDB();
+    const { searchTerm } = req.query;
+    const result = await ProductServices.getProductsFromDB(searchTerm as string);
+
        res.status(200).json({
          success: true,
          message: "Product petched successfully",

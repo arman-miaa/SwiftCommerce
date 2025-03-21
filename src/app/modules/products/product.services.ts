@@ -2,16 +2,17 @@ import { TProduct } from "./product.interface";
 import { Product } from "./product.model";
 
 const createProductIntoDB = async (productData: TProduct) => {
-    const result = await Product.create(productData);
-    return result;
-}
+  const result = await Product.create(productData);
+  return result;
+};
 
-const getProductsFromDB = async () => {
-    const data = await Product.find();
-    return data;
-}
+const getProductsFromDB = async (searchTerm = "") => {
+    const query = searchTerm ? {name: {$regex: searchTerm, $options: "i"}} : {}
+  const data = await Product.find(query);
+  return data;
+};
 
 export const ProductServices = {
-    createProductIntoDB,
-    getProductsFromDB
-}
+  createProductIntoDB,
+  getProductsFromDB,
+};
