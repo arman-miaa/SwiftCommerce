@@ -2,7 +2,9 @@ import { TOrder } from "./order.interface";
 import { OrderModel } from "./order.model";
 
 const createANewOrder = async (orderData: TOrder) => {
-  return await OrderModel.create(orderData);
+    console.log('order data in service',orderData);
+    const result = await OrderModel.create(orderData);
+    return result;
 };
 
 const getAllOrdersFromDB = async (query: string | undefined) => {

@@ -11,11 +11,11 @@ const orderValidationSchema = z.object({
   }),
   quantity: z.number({
     required_error: "Quantity is required",
-    invalid_type_error: "Quantity must be number",
+    invalid_type_error: "Quantity must be a number",
   }),
   price: z.number({
     required_error: "Price is required",
-    invalid_type_error: "Price must be number",
+    invalid_type_error: "Price must be a number",
   }),
 });
 
