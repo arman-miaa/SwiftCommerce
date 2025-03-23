@@ -5,7 +5,7 @@ import { isAdmin } from "../../middleware/adminMiddlweare";
 const router = express.Router();
 
 
-router.get("/", verifyToken,isAdmin,ProductControllers.getAllProducts)
+router.get("/", ProductControllers.getAllProducts)
 router.post("/", verifyToken,isAdmin, ProductControllers.createProduct)
 router.get("/:productId",verifyToken, isAdmin, ProductControllers.getSingleProduct)
 router.put("/:productId", verifyToken,isAdmin, ProductControllers.updateProduct)
