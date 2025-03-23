@@ -16,7 +16,8 @@ const createOrder = async (req: Request, res: Response) => {
         success: false,
         message: "Validation error",
         errors: errorLists,
-      });
+       });
+        return;
     }
     if (zodValidation.success) {
       const product = await Product.findById(zodValidation.data.productId);
@@ -24,7 +25,8 @@ const createOrder = async (req: Request, res: Response) => {
          res.status(400).json({
           success: false,
           message: "Insufficient quantity available in this inventory",
-        });
+         });
+          return;
       }
 
       if (product) {
@@ -43,7 +45,8 @@ const createOrder = async (req: Request, res: Response) => {
           success: true,
           message: "Order placed successfully",
           data: newOrder,
-        });
+         });
+          return;
       }
     }
   } catch (err: any) {
@@ -67,7 +70,8 @@ const handleGetAllOrders = async (req: Request, res: Response) => {
         success: true,
         message: "No orders found for this email",
         data: [],
-      });
+       });
+        return;
     }
 
      res.status(200).json({
