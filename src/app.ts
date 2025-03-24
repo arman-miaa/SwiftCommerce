@@ -1,20 +1,23 @@
-import express from "express";
-import cors from "cors"
+import express, { Request, Response } from "express";
+import cors from "cors";
 import { ProductRoutes } from "./app/modules/products/product.routes";
-import {  OrderRoutes } from "./app/modules/orders/order.routes";
+import { OrderRoutes } from "./app/modules/orders/order.routes";
 import { UserRoutes } from "./app/modules/users/user.routes";
+
 const app = express();
-const port = 3000;
 
+// Middleware
 app.use(express.json());
-app.use(cors())
+app.use(cors());
 
-app.use('/api/products', ProductRoutes)
-app.use('/api/orders', OrderRoutes)
-app.use('/api/users', UserRoutes)
+// Routes
+app.use("/api/products", ProductRoutes);
+app.use("/api/orders", OrderRoutes);
+app.use("/api/users", UserRoutes);
 
-app.get("/", (req, res) => {
-  res.send("SwiftCommerce Server is running....!");
+// Root Route
+app.get("/", (req: Request, res: Response) => {
+  res.send("🚀 SwiftCommerce Server is running....!");
 });
 
 export default app;
