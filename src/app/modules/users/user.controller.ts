@@ -2,11 +2,12 @@ import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import config from "../../config";
 import { userServices } from "./user.services";
+import { loginValidationSchema, registerValidationSchema } from "./user.validation";
 
 const JWT_SECRET = config.jwt_secret as string;
 
 const registerUser = async (req: Request, res: Response):Promise<void> => {
-    const { email, password, role } = req.body;
+    const { email, password, role = "user" } = registerValidationSchema.parse(req.body); 
     try {
         const existingUser = await userServices.findUserByEmail(email);
         if (existingUser) {
@@ -14,8 +15,8 @@ const registerUser = async (req: Request, res: Response):Promise<void> => {
             return;
         }
         
-        const userRole = role || "user";
-        const user = await userServices.createUser( email, password, role );
+        
+        const user = await userServices.createUser( email, password, role  );
         res.status(200).send({message: "User Created successfully", user})
     } catch (error) {
         res.status(500).json({message: "User Registration failed", error})
@@ -24,7 +25,7 @@ const registerUser = async (req: Request, res: Response):Promise<void> => {
 }
 
 const loginUser = async (req: Request, res: Response): Promise<void> => {
-    const { email, password } = req.body;
+    const { email, password } = loginValidationSchema.parse(req.body);
     try {
         const user = await userServices.findUserByEmail(email);
         if (!user) {
@@ -32,9 +33,9 @@ const loginUser = async (req: Request, res: Response): Promise<void> => {
             return;
         }
 
-        const inValidPassword = await userServices.ValidatePassword(password, user.password);
+        const isValidPassword = await userServices.ValidatePassword(password, user.password);
 
-        if (!inValidPassword) {
+        if (!isValidPassword) {
              res.status(400).send({ message: "Invalid  password" });
              return;
         }

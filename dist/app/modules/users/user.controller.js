@@ -16,16 +16,16 @@ exports.UserController = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = __importDefault(require("../../config"));
 const user_services_1 = require("./user.services");
+const user_validation_1 = require("./user.validation");
 const JWT_SECRET = config_1.default.jwt_secret;
 const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { email, password, role } = req.body;
+    const { email, password, role = "user" } = user_validation_1.registerValidationSchema.parse(req.body);
     try {
         const existingUser = yield user_services_1.userServices.findUserByEmail(email);
         if (existingUser) {
             res.status(500).send({ message: "User email is already exists! Try using a new email" });
             return;
         }
-        const userRole = role || "user";
         const user = yield user_services_1.userServices.createUser(email, password, role);
         res.status(200).send({ message: "User Created successfully", user });
     }
@@ -34,15 +34,15 @@ const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { email, password } = req.body;
+    const { email, password } = user_validation_1.loginValidationSchema.parse(req.body);
     try {
         const user = yield user_services_1.userServices.findUserByEmail(email);
         if (!user) {
             res.status(400).send({ message: "Invalid email or password" });
             return;
         }
-        const inValidPassword = yield user_services_1.userServices.ValidatePassword(password, user.password);
-        if (!inValidPassword) {
+        const isValidPassword = yield user_services_1.userServices.ValidatePassword(password, user.password);
+        if (!isValidPassword) {
             res.status(400).send({ message: "Invalid  password" });
             return;
         }
